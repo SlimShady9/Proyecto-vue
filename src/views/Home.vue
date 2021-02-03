@@ -12,7 +12,7 @@
         </v-card>
         <v-card color="error" dark>
           <v-card-text class="display-1 text-center">
-            ${{valor}}
+            Precio dolar ${{valor}} COP
           </v-card-text>
         </v-card>
       </v-flex>
