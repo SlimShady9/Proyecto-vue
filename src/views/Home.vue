@@ -7,12 +7,16 @@
           locale="es-cl"
           :min="minimo"
           :max="maximo"
-          @change="getDolar(fecha)">
+          show-current="false"
+          @change="actualizarCurrency(fecha)">
           </v-date-picker>    
         </v-card>
         <v-card color="error" dark>
           <v-card-text class="display-1 text-center">
-            Precio dolar ${{valor}} COP
+            Precio dolar ${{valorUSD}} COP 
+          </v-card-text>
+          <v-card-text class="display-1 text-center">
+            Precio bitcoin ${{valorBitcoin}} USD 
           </v-card-text>
         </v-card>
       </v-flex>
@@ -31,18 +35,39 @@ export default {
       fecha : new Date().toISOString().substr(0, 10),
       minimo: '1984',
       maximo: new Date().toISOString().substr(0, 10),
-      valor : 0
+      valorUSD : 0,
+      valorBitcoin : 0
     }
   },
   methods: {
     async getDolar(dia){
       let datos = await axios.get(`https://trm-colombia.vercel.app/?date=${dia}`)
-      this.valor = datos.data.data.value
+      this.valorUSD = datos.data.data.value
 
+    },
+    async getBitcoin(dia){
+      try {
+        let datos
+      if (dia ===  new Date().toISOString().substr(0, 10)){
+        datos = await axios.get("https://api.coindesk.com/v1/bpi/currentprice.json")
+        this.valorBitcoin = await datos.data.bpi.USD.rate
+      }
+      else{
+        datos = await axios.get(`https://api.coindesk.com/v1/bpi/historical/close.json?start=${dia}&end=${dia}`)
+        this.valorBitcoin = await datos.data.bpi[dia]
+      }
+      } catch (error) {
+        this.valorBitcoin = "Error al cargar"
+      }
+      
+    },
+    actualizarCurrency(dia){
+      this.getDolar(dia)
+      this.getBitcoin(dia)
     }
   },
   created(){
-    this.getDolar(this.fecha)
+    this.actualizarCurrency(this.fecha)
   }
 }
 </script>
