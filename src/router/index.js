@@ -5,10 +5,15 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '',
     name: 'Home',
     component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
   },
+  {
+    path: '/crudapp',
+    name: 'CrudApp',
+    component: () => import('../views/CrudApp.vue')
+  }
 ]
 
 const router = new VueRouter({

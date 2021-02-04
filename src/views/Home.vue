@@ -11,10 +11,12 @@
           @change="actualizarCurrency(fecha)">
           </v-date-picker>    
         </v-card>
-        <v-card color="error" dark>
+        <v-card color="error mt-2" dark>
           <v-card-text class="display-1 text-center">
             Precio dolar ${{valorUSD}} COP 
           </v-card-text>
+        </v-card>
+        <v-card color="error mt-2" dark>
           <v-card-text class="display-1 text-center">
             Precio bitcoin ${{valorBitcoin}} USD 
           </v-card-text>
