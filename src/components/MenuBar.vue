@@ -23,14 +23,14 @@
                 <v-divider></v-divider>
 
                 <v-list>
-                    <router-link class="no-anchor" to="/">
+                    <router-link class="no-anchor " to="/">
                         <v-list-item link >
-                            <v-list-item-title >Home Page</v-list-item-title>    
+                            <v-list-item-title class="nav-item-list"><strong>Home Page</strong></v-list-item-title>    
                         </v-list-item> 
                     </router-link>
                     <router-link class="no-anchor" to="/crudapp">
                         <v-list-item link>
-                            <v-list-item-title>Crud App</v-list-item-title>    
+                            <v-list-item-title class="nav-item-list"><strong>Crud App</strong></v-list-item-title>    
                         </v-list-item> 
                     </router-link>
                                        
@@ -54,6 +54,10 @@ export default {
 
 .no-anchor{
     text-decoration: none;
+    
 }
-
+.nav-item-list{
+    color: white;
+    padding: 0 0 0 1em;
+}
 </style>
