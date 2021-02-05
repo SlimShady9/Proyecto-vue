@@ -1,43 +1,33 @@
 <template>
   <div>
     <v-card>
-        <v-snackbar
-        v-model="snackbar"
-        absolute top
-        right color="success"
-        >
-            <span>Registration successful!</span>
-            <v-icon dark>
-                mdi-checkbox-marked-circle
-            </v-icon>
-        </v-snackbar>
         <form class="crud-form">
           <v-text-field
-            v-model="name"
+            v-model="input.name"
             :error-messages="nameErrors"
-            :counter="10"
+            :counter="15"
             label="Titulo"
             required
             @input="$v.name.$touch()"
             @blur="$v.name.$touch()"
           ></v-text-field>
-          <v-text-field
-            v-model="descripcion"
+          <v-textarea
+            v-model="input.descripcion"
             :error-messages="descripcionErrors"
             label="Descripcion"
             required
             @input="$v.descripcion.$touch()"
             @blur="$v.descripcion.$touch()"
-          ></v-text-field>
+          ></v-textarea>
 
           <v-btn
-            class="mr-4"
+            class="mr-4 success mt-3"
             @click="submit"
           >
-            submit
+            {{btnName}}
           </v-btn>
-          <v-btn @click="clear">
-            clear
+          <v-btn @click="clear" class="mt-3">
+            Limpiar campos
           </v-btn>
         </form>
     </v-card>
@@ -47,6 +37,7 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, maxLength } from 'vuelidate/lib/validators'
+  import {mapMutations, mapState} from 'vuex'
 
   export default {
     mixins: [validationMixin],
@@ -63,9 +54,8 @@
     },
 
     data: () => ({
-      name: '',
-      descripcion: '',
-      snackbar: false
+      snackbar: false,
+      submitName : 'Agregar'
     }),
 
     computed: {
@@ -82,17 +72,35 @@
         !this.$v.descripcion.required && errors.push('Descripcion es requerida.')
         return errors
       },
+      ...mapState(['editionMode', 'input']),
+      btnName(){
+        if (this.editionMode === false)
+          return 'Agregar'
+        return 'Editar'
+      }
     },
 
     methods: {
+      ...mapMutations(['agregarTarea', 'editarTarea']),
       submit () {
         this.$v.$touch()
+        if (this.editionMode === false){
+          const obj = {titulo: this.input.name, descripcion: this.input.descripcion}
+          this.agregarTarea(obj)
+        } else{
+          console.log(this.input)
+          const obj = {id: this.input.id , titulo: this.input.name , descripcion: this.input.descripcion}
+          this.editarTarea(obj)
+        }
+        this.clear()
+        this.snackbar = true
       },
       clear () {
         this.$v.$reset()
-        this.name = ''
-        this.descripcion = ''
-      },
+        this.input.name = ''
+        this.input.descripcion = ''
+      }
+      
     },
   }
 </script>
